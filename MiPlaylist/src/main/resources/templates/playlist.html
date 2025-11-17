@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Playlist 🎬</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #121212;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: #b36bfc;
+        }
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #b36bfc;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .video-card {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .video-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 315px;
+            border-radius: 8px;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Mi Playlist 🎬</h1>
+
+    <!-- Formulario para agregar videos -->
+    <form action="/playlist/add" method="post" class="form-group">
+        <input type="text" name="title" placeholder="Título del video" required>
+        <input type="text" name="url" placeholder="URL del video" required>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <!-- Lista de videos -->
+    <div>
+        <ul style="list-style:none; padding:0;">
+            <li th:each="video : ${videos}" class="video-card">
+
+                <p class="video-title" th:text="${video.title}"></p>
+
+                <iframe th:src="${video.url}"></iframe>
+
+                <form action="/playlist/delete" method="post" style="margin-top:10px;">
+                    <input type="hidden" name="id" th:value="${video.id}">
+                    <button type="submit" style="background:#ff5c5c;">Eliminar</button>
+                </form>
+
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
