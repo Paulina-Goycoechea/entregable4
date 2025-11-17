@@ -30,4 +30,15 @@ public class VideoController {
     public void delete(@PathVariable String id) {
         service.deleteVideo(id);
     }
+
+    @PutMapping("/{id}")
+    public Video update(@PathVariable String id, @RequestBody Video updatedVideo) {
+        return service.updateVideo(id, updatedVideo);
+    }
+
+    @GetMapping("/{id}")
+    public Video getById(@PathVariable String id) {
+        return service.getVideoById(id);
+    }
+
 }

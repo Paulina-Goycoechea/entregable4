@@ -1,10 +1,13 @@
 package com.paulina.miplaylist.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paulina.miplaylist.model.Video;
 import com.paulina.miplaylist.repository.VideoJsonRepository;
 import org.springframework.stereotype.Service;
 
+import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -24,15 +27,29 @@ public class VideoService {
 
     public Video addVideo(Video video) {
         video.setId(UUID.randomUUID().toString());
-        video.setArtist("Unknown");
 
-        // Mini extra: generar thumbnail automáticamente
-        video.setThumbnail("https://img.youtube.com/vi/" + extractYoutubeId(video.getUrl()) + "/0.jpg");
+        // 1. Thumbnail
+        String youtubeId = extractYoutubeId(video.getUrl());
+        video.setThumbnail("https://img.youtube.com/vi/" + youtubeId + "/0.jpg");
+
+        // 2. Obtener artista real desde YouTube oembed
+        try {
+            String apiUrl = "https://www.youtube.com/oembed?url=" + video.getUrl() + "&format=json";
+            ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+            Map<String, Object> data = mapper.readValue(new URL(apiUrl), Map.class);
+
+            String author = (String) data.get("author_name");
+            video.setArtist(author != null ? author : "Unknown");
+
+        } catch (Exception e) {
+            video.setArtist("Unknown");
+        }
 
         videos.add(0, video);
         repo.saveVideos(videos);
         return video;
     }
+
 
     public void deleteVideo(String id) {
         videos.removeIf(v -> v.getId().equals(id));
@@ -41,9 +58,52 @@ public class VideoService {
 
     private String extractYoutubeId(String url) {
         try {
-            return url.split("v=")[1];
+            // Caso típico ?v=ID
+            if (url.contains("v=")) {
+                String id = url.split("v=")[1];
+                if (id.contains("&")) {
+                    id = id.split("&")[0]; // cortar parámetros extras
+                }
+                return id;
+            }
+
+            // Caso youtu.be/ID
+            if (url.contains("youtu.be/")) {
+                return url.substring(url.lastIndexOf("/") + 1);
+            }
+
+            return "default";
         } catch (Exception e) {
             return "default";
         }
     }
+
+    public Video updateVideo(String id, Video updated) {
+        for (int i = 0; i < videos.size(); i++) {
+            if (videos.get(i).getId().equals(id)) {
+
+                Video v = videos.get(i);
+
+                v.setTitle(updated.getTitle());
+                v.setUrl(updated.getUrl());
+                v.setThumbnail(updated.getThumbnail());
+                v.setArtist(updated.getArtist());
+                v.setLiked(updated.isLiked());
+                v.setFavorite(updated.isFavorite());
+
+                repo.saveVideos(videos);
+                return v;
+            }
+        }
+        return null;
+    }
+
+    public Video getVideoById(String id) {
+        return videos.stream()
+                .filter(v -> v.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
 }
+

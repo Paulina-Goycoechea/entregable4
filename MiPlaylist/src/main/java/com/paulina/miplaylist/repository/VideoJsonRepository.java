@@ -13,17 +13,22 @@ import java.util.List;
 public class VideoJsonRepository {
 
     private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-    private final String filePath = "src/main/resources/data/videos.json";
+
+    // Archivo EXTERNO (persistente), fuera del classpath
+    private final String filePath = "data/videos.json";
 
     private File getFile() {
-        return new File(filePath);
+        File file = new File(filePath);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        return file;
     }
 
     public List<Video> loadVideos() {
         try {
             File file = getFile();
             if (!file.exists()) {
-                file.getParentFile().mkdirs();
                 objectMapper.writeValue(file, new ArrayList<>());
             }
             return objectMapper.readValue(file, new TypeReference<List<Video>>() {});
