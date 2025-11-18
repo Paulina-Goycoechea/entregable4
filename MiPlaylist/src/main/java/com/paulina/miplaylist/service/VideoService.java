@@ -25,6 +25,7 @@ public class VideoService {
         return videos;
     }
 
+    /*
     public Video addVideo(Video video) {
         video.setId(UUID.randomUUID().toString());
 
@@ -48,7 +49,7 @@ public class VideoService {
         videos.add(0, video);
         repo.saveVideos(videos);
         return video;
-    }
+    }*/
 
 
     public void deleteVideo(String id) {
@@ -104,6 +105,40 @@ public class VideoService {
                 .findFirst()
                 .orElse(null);
     }
+
+    public Video addVideo(Video video) {
+        video.setId(generateId());
+        video.setThumbnail(generateThumbnail(video.getUrl()));
+        video.setArtist(fetchArtistFromYoutube(video.getUrl()));
+
+        videos.add(0, video);
+        repo.saveVideos(videos);
+
+        return video;
+    }
+
+    private String generateId() {
+        return UUID.randomUUID().toString();
+    }
+
+    private String generateThumbnail(String url) {
+        String youtubeId = extractYoutubeId(url);
+        return "https://img.youtube.com/vi/" + youtubeId + "/0.jpg";
+    }
+
+    private String fetchArtistFromYoutube(String url) {
+        try {
+            String apiUrl = "https://www.youtube.com/oembed?url=" + url + "&format=json";
+            ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+
+            Map<String, Object> data = mapper.readValue(new URL(apiUrl), Map.class);
+            return (String) data.getOrDefault("author_name", "Unknown");
+
+        } catch (Exception e) {
+            return "Unknown";
+        }
+    }
+
 
 }
 

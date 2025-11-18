@@ -31,7 +31,7 @@ interface Video {
     favorite: boolean;
 }
 
-const API = "http://localhost:8080/api/videos";
+const API = "http://localhost:8085/api/videos";
 
 const Playlist = () => {
     const [searchQuery, setSearchQuery] = useState("");

@@ -10,9 +10,9 @@ import { Separator } from "@/components/ui/separator";
 const Settings = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState({
-    firstName: "Juan",
-    lastName: "Pérez",
-    email: "juan.perez@email.com",
+    firstName: "Pau",
+    lastName: "Goycoechea",
+    email: "paugoyco@gmail.com",
   });
 
   const [preferences, setPreferences] = useState({

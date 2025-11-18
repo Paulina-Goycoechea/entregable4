@@ -19,7 +19,7 @@ interface Video {
     favorite: boolean;
 }
 
-const API = "http://localhost:8080/api/videos";
+const API = "http://localhost:8085/api/videos";
 
 function extractEmbed(url: string): string {
     const match = url.match(/v=([a-zA-Z0-9_-]+)/);
