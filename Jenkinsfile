@@ -13,6 +13,7 @@ pipeline {
     }
 
     stages {
+        //Clona tu repositorio GitHub
         stage('Checkout') {
             steps {
                 git branch: 'main',
@@ -20,6 +21,8 @@ pipeline {
             }
         }
 
+        /*Entra a la carpeta del backend y ejecuta maven: limpia el proyecto(clean),
+        compila y empaqueta(package), genera el .jar*/
         stage('Backend - Build Maven') {
             steps {
                 dir("${BACKEND_DIR}") {
@@ -28,6 +31,7 @@ pipeline {
             }
         }
 
+        /*Ejecuta los tests de JUnit. Si algún test falla → Jenkins detiene el pipeline.*/
         stage('Backend - Run Tests') {
             steps {
                 dir("${BACKEND_DIR}") {
@@ -36,6 +40,7 @@ pipeline {
             }
         }
 
+        /*Entra al proyecto React. Instala dependencias usando npm install.*/
         stage('Frontend - Install Dependencies') {
             steps {
                 dir("${FRONTEND_DIR}") {
@@ -44,6 +49,7 @@ pipeline {
             }
         }
 
+        /*Genera la carpeta dist con el frontend optimizado para producción.*/
         stage('Frontend - Build') {
             steps {
                 dir("${FRONTEND_DIR}") {
@@ -52,6 +58,7 @@ pipeline {
             }
         }
 
+        /*Crea C:deploy-entregable4: deploy/frontend + deploy/backend.jar*/
         stage('Package Deploy Folder') {
             steps {
                 dir('.') {
@@ -68,6 +75,7 @@ pipeline {
             }
         }
 
+        /*Ejecuta el script deploy-windows.bat*/
         stage('Deploy') {
             steps {
                 echo "Ejecutando scripts de deploy..."

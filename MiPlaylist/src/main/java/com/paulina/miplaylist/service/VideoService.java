@@ -25,7 +25,7 @@ public class VideoService {
         return videos;
     }
 
-    /*
+    //CODE SMELL - LONG METHOD
     public Video addVideo(Video video) {
         video.setId(UUID.randomUUID().toString());
 
@@ -49,13 +49,14 @@ public class VideoService {
         videos.add(0, video);
         repo.saveVideos(videos);
         return video;
-    }*/
+    }
 
 
     public void deleteVideo(String id) {
         videos.removeIf(v -> v.getId().equals(id));
         repo.saveVideos(videos);
     }
+
 
     private String extractYoutubeId(String url) {
         try {
@@ -79,6 +80,7 @@ public class VideoService {
         }
     }
 
+
     public Video updateVideo(String id, Video updated) {
         for (int i = 0; i < videos.size(); i++) {
             if (videos.get(i).getId().equals(id)) {
@@ -99,6 +101,7 @@ public class VideoService {
         return null;
     }
 
+
     public Video getVideoById(String id) {
         return videos.stream()
                 .filter(v -> v.getId().equals(id))
@@ -106,6 +109,7 @@ public class VideoService {
                 .orElse(null);
     }
 
+    /*
     public Video addVideo(Video video) {
         video.setId(generateId());
         video.setThumbnail(generateThumbnail(video.getUrl()));
@@ -138,7 +142,6 @@ public class VideoService {
             return "Unknown";
         }
     }
-
-
+    */
 }
 

@@ -39,9 +39,8 @@ const Playlist = () => {
     const [newVideoUrl, setNewVideoUrl] = useState("");
     const [videos, setVideos] = useState<Video[]>([]);
 
-    // ============================================
-    // 🔹 Cargar videos al inicio
-    // ============================================
+
+    //Cargar videos al inicio
     useEffect(() => {
         fetch(API)
             .then((res) => res.json())
@@ -49,9 +48,8 @@ const Playlist = () => {
             .catch((err) => console.error(err));
     }, []);
 
-    // ============================================
-    // 🔹 Toggle Like
-    // ============================================
+
+    //Toggle Like
     const toggleLike = async (id: string) => {
         const video = videos.find((v) => v.id === id);
         if (!video) return;
@@ -67,9 +65,8 @@ const Playlist = () => {
         setVideos(videos.map((v) => (v.id === id ? updated : v)));
     };
 
-    // ============================================
-    // 🔹 Toggle Favorite
-    // ============================================
+
+    //Toggle Favorite
     const toggleFavorite = async (id: string) => {
         const video = videos.find((v) => v.id === id);
         if (!video) return;
@@ -85,9 +82,8 @@ const Playlist = () => {
         setVideos(videos.map((v) => (v.id === id ? updated : v)));
     };
 
-    // ============================================
-    // 🔹 Delete Video
-    // ============================================
+
+    //Delete Video
     const deleteVideo = async (id: string) => {
         await fetch(`${API}/${id}`, {
             method: "DELETE",
@@ -96,9 +92,8 @@ const Playlist = () => {
         setVideos(videos.filter((v) => v.id !== id));
     };
 
-    // ============================================
-    // 🔹 Add New Video
-    // ============================================
+
+    //Add New Video
     const addVideo = () => {
         fetch(API, {
             method: "POST",
@@ -116,9 +111,8 @@ const Playlist = () => {
             });
     };
 
-    // ============================================
-    // 🔹 Search Filter
-    // ============================================
+
+    //Search Filter
     const filteredVideos = videos.filter((v) =>
         v.title.toLowerCase().includes(searchQuery.toLowerCase())
     );

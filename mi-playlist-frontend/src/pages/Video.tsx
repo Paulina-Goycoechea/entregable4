@@ -50,9 +50,8 @@ const VideoPage = () => {
 
     const embedUrl = `https://www.youtube.com/embed/${extractEmbed(video.url)}`;
 
-    // ------------------------------
+
     // ACCIONES: Like / Favorite
-    // ------------------------------
     const toggleLike = async () => {
         const updated = { ...video, liked: !video.liked };
 
@@ -86,17 +85,15 @@ const VideoPage = () => {
         );
     };
 
-    // ------------------------------
+
     // SHARE (copiar URL)
-    // ------------------------------
     const shareVideo = () => {
         navigator.clipboard.writeText(window.location.href);
         alert("🔗 Copied link to clipboard!");
     };
 
-    // ------------------------------
+
     // UP NEXT ordenado por favoritos
-    // ------------------------------
     const upNext = allVideos
         .filter((v) => v.id !== video.id)
         .sort((a, b) => {
