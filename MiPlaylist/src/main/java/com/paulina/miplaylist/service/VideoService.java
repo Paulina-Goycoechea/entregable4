@@ -25,7 +25,8 @@ public class VideoService {
         return videos;
     }
 
-    //CODE SMELL - LONG METHOD
+    //CODE SMELL - LONG METHOD --> viola el principio de responsabilidad única
+    /*
     public Video addVideo(Video video) {
         video.setId(UUID.randomUUID().toString());
 
@@ -49,7 +50,7 @@ public class VideoService {
         videos.add(0, video);
         repo.saveVideos(videos);
         return video;
-    }
+    }*/
 
 
     public void deleteVideo(String id) {
@@ -109,7 +110,7 @@ public class VideoService {
                 .orElse(null);
     }
 
-    /*
+
     public Video addVideo(Video video) {
         video.setId(generateId());
         video.setThumbnail(generateThumbnail(video.getUrl()));
@@ -142,6 +143,6 @@ public class VideoService {
             return "Unknown";
         }
     }
-    */
+
 }
 
